@@ -2,12 +2,13 @@ esphome:
   name: duc-moc-gateway
 
 esp32:
-  board: esp32p4  # Mật danh chuẩn 100% để qua mặt cả 2 lớp bảo vệ
+  board: esp32-p4-evboard  # Tên định danh chuẩn 100% của hãng Waveshare
   variant: esp32p4
+  flash_size: 16MB         # Mở khóa toàn bộ 16MB bộ nhớ của mạch
   framework:
     type: esp-idf
 
-# Cầu nối WiFi SDIO 6 chân chuẩn xác cho P4 và C6
+# Cầu nối SDIO ép con C6 phát WiFi cho P4
 esp32_hosted:
   variant: ESP32C6
   reset_pin: GPIO54
@@ -19,7 +20,6 @@ esp32_hosted:
   d2_pin: GPIO41
   d3_pin: GPIO42
 
-# Danh sách WiFi xưởng Đức Mộc (Tự động chuyển mạng)
 wifi:
   networks:
     - ssid: "......VUPHONG....."
