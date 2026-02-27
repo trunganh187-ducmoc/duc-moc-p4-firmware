@@ -104,21 +104,14 @@ voice_assistant:
   speaker: ai_speaker
   use_wake_word: true
   on_listening:
-    - lambda: |-
-        id(ai_status) = "Dang nghe...";
-        id(ai_answer) = "";
-  on_stt_output: # Khi AI bắt được chữ bác nói
-    - lambda: id(ai_answer) = x;
-  on_tts_start: # Khi AI trả lời bằng văn bản và bắt đầu phát tiếng
-    - lambda: |-
-        id(ai_status) = "AI tra loi:";
-        id(ai_answer) = x;
+    - lambda: 'id(ai_status) = "Dang nghe..."; id(ai_answer) = "";'
+  on_stt_end: # ĐÃ VÁ LỖI: Dùng on_stt_end để nhận chữ bác nói
+    - lambda: 'id(ai_answer) = x;'
+  on_tts_start: # Nhận chữ AI chuẩn bị trả lời
+    - lambda: 'id(ai_status) = "AI tra loi:"; id(ai_answer) = x;'
   on_end:
-    - delay: 10s # Giữ chữ trên màn hình 10 giây cho bác kịp đọc
-    - lambda: |-
-        id(ai_status) = "San sang";
-        id(ai_answer) = "";
-
+    - delay: 10s # Giữ chữ trên màn hình 10 giây
+    - lambda: 'id(ai_status) = "San sang"; id(ai_answer) = "";'
 # --- BLUETOOTH PROXY ---
 bluetooth_proxy:
   active: true
