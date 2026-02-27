@@ -6,6 +6,21 @@ esp32:
   variant: esp32p4
   framework:
     type: esp-idf
+    version: 5.4.0
+
+esp32_hosted:
+  variant: ESP32C6
+  reset_pin: GPIO54
+  active_high: true
+
+wifi:
+  networks:
+    - ssid: "......VUPHONG....."
+      password: "0913718786@bc.."
+    - ssid: "TrungAnh_2.4G"
+      password: "0913718786"
+  ap:
+    ssid: "Duc Moc Gateway Fallback"
 
 api:
 ota:
