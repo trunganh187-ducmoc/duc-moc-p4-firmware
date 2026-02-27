@@ -1,0 +1,34 @@
+esphome:
+  name: duc-moc-gateway
+
+esp32:
+  board: esp32-p4-evk
+  variant: esp32p4
+  framework:
+    type: esp-idf
+    version: 5.4.0
+
+# Đây là đoạn mượn sóng WiFi của con chip C6
+esp32_hosted:
+  variant: ESP32C6
+  reset_pin: GPIO54
+  active_high: true
+
+# Danh sách các mạng WiFi (anh có thể thêm mạng thứ 3, thứ 4 thoải mái)
+wifi:
+  networks:
+    - ssid: "......VUPHONG....."
+      password: "0913718786@bc.."
+    - ssid: "TrungAnh_2.4G"
+      password: "0913718786"
+
+  # Điểm phát WiFi cứu hộ (Nếu mất mạng, nó sẽ tự phát ra WiFi này để anh kết nối vào sửa)
+  ap:
+    ssid: "Duc Moc Gateway Fallback"
+
+api:
+ota:
+  - platform: esphome
+
+logger:
+  level: DEBUG
