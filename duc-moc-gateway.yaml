@@ -13,13 +13,12 @@ esp32:
       CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
       CONFIG_SPIRAM_RODATA: "y"
 
-psram: # Đánh thức 32MB RAM
+psram: # Kích hoạt 32MB RAM
 
 logger:
   level: DEBUG
   hardware_uart: USB_SERIAL_JTAG
 
-# Cấu hình kết nối C6 chuẩn xác theo tài liệu bác gửi
 esp32_hosted:
   variant: ESP32C6
   reset_pin: GPIO54
@@ -39,7 +38,7 @@ wifi:
     - ssid: "TrungAnh_2.4G"
       password: "0913718786"
 
-# --- MẮT: MÀN HÌNH OLED (Dùng GPIO 1 & 2 theo Pinout) ---
+# --- MÀN HÌNH (GPIO 1 & 2) ---
 i2c:
   sda: GPIO1
   scl: GPIO2
@@ -58,12 +57,15 @@ display:
       it.print(0, 0, id(font_roboto), "Duc Moc Gateway");
       if (id(wifi_w).is_connected()) {
         it.print(0, 20, id(font_roboto), "WiFi: OK");
-      } else {
-        it.print(0, 20, id(font_roboto), "WiFi: Looking...");
       }
-      it.print(0, 45, id(font_roboto), "AI: Ready!");
+      // Hiển thị trạng thái AI khi đang nghe
+      if (id(va).is_running()) {
+         it.print(0, 45, id(font_roboto), "AI: Dang nghe...");
+      } else {
+         it.print(0, 45, id(font_roboto), "AI: San sang");
+      }
 
-# --- TAI: MICRO INMP441 (Dùng GPIO 3, 4, 5) ---
+# --- ÂM THANH I2S (GPIO 3, 4, 5, 6) ---
 i2s_audio:
   - i2s_lrclk_pin: GPIO3 
     i2s_bclk_pin: GPIO4  
@@ -75,7 +77,30 @@ microphone:
     adc_type: external
     pdm: false
 
-# TẠM BỎ LOA VÀ BLUETOOTH ĐỂ GIẢM TẢI DOWNLOAD CHO MÁY CHỦ
+speaker:
+  - platform: i2s_audio
+    id: ai_speaker
+    i2s_dout_pin: GPIO6
+    dac_type: external
+
+# --- KÍCH HOẠT VOICE ASSISTANT (TRỢ LÝ ẢO) ---
+voice_assistant:
+  id: va
+  microphone: ai_mic
+  speaker: ai_speaker
+  use_wake_word: true # Cho phép gọi "Hey Jarvis" hoặc từ khóa tự chọn
+
+# --- BLUETOOTH & UPDATE C6 (MÓN HỜI CỦA BÁC) ---
+bluetooth_proxy:
+  active: true
+
+# Đoạn này sẽ giúp update con C6 để chạy song song WiFi+BT
+# Bác chỉ bỏ dấu # khi đã upload file .bin lên GitHub nhé
+update:
+  platform: esp32_hosted
+  name: "C6 Coprocessor Update"
+  path: network_adapter.bin 
+
 api:
 ota:
   - platform: esphome
