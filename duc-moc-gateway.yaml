@@ -2,13 +2,22 @@ esphome:
   name: duc-moc-gateway
 
 esp32:
-  board: esp32-p4-evboard  # Tên định danh chuẩn 100% của hãng Waveshare
+  board: esp32-p4-evboard
   variant: esp32p4
-  flash_size: 16MB         # Mở khóa toàn bộ 16MB bộ nhớ của mạch
+  flash_size: 16MB # Khai báo lớp ngoài 16MB Flash
   framework:
     type: esp-idf
+    # Ép máy chủ nhận diện chuẩn 32MB PSRAM và 16MB Flash từ tận lõi hệ điều hành
+    sdkconfig_options:
+      CONFIG_ESPTOOLPY_FLASHSIZE_16MB: "y"
+      CONFIG_SPIRAM: "y"
+      CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
+      CONFIG_SPIRAM_RODATA: "y"
 
-# Cầu nối SDIO ép con C6 phát WiFi cho P4
+# Lệnh này bắt buộc phải có để ESPHome xuất đủ 32MB RAM ra cho anh dùng
+psram:
+
+# Cầu nối WiFi (Đã chuẩn 100%)
 esp32_hosted:
   variant: ESP32C6
   reset_pin: GPIO54
@@ -20,6 +29,7 @@ esp32_hosted:
   d2_pin: GPIO41
   d3_pin: GPIO42
 
+# 2 WiFi xưởng Đức Mộc
 wifi:
   networks:
     - ssid: "......VUPHONG....."
@@ -28,6 +38,9 @@ wifi:
       password: "0913718786"
   ap:
     ssid: "Duc Moc Gateway Fallback"
+
+# Xóa lỗi cảnh báo vàng
+captive_portal:
 
 api:
 ota:
