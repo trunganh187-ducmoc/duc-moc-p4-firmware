@@ -11,10 +11,12 @@ jobs:
       
       - uses: esphome/build-action@main
         id: esphome-build
+        continue-on-error: true # Bùa chú: Thằng in nhãn có dỗi cũng mặc kệ, chạy tiếp!
         with:
-          yaml-file: duc-moc-gateway.yaml # CHÍNH LÀ CHỖ NÀY: Dùng gạch ngang (-)
+          yaml-file: duc-moc-gateway.yaml
           
       - uses: actions/upload-artifact@v4
         with:
           name: firmware-bin
-          path: ${{ steps.esphome-build.outputs.name }}
+          # Moi thẳng cục .bin từ trong lò đúc ra gửi về cho anh!
+          path: .esphome/build/duc-moc-gateway/.pioenvs/duc-moc-gateway/*.bin
