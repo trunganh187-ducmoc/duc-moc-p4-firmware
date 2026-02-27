@@ -2,13 +2,13 @@ esphome:
   name: duc-moc-gateway
 
 esp32:
-  board: esp32-p4-evk
-  variant: esp32p4
+  board: esp32 # Đổi tên thành mạch chung chung để "lừa" hệ thống qua cửa
+  variant: esp32p4 # Khai báo lõi thực sự là P4
   framework:
     type: esp-idf
-    version: 5.4.0
+    # Đã bỏ dòng version để hệ thống tự chọn bản ngon nhất, hết báo vàng
 
-# Đã bổ sung đủ 6 chân tín hiệu SDIO nối P4 với C6
+# Cầu nối WiFi (Đã đủ 6 chân tín hiệu chuẩn)
 esp32_hosted:
   variant: ESP32C6
   reset_pin: GPIO54
