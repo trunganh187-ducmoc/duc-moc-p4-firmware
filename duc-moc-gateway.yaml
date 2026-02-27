@@ -1,3 +1,12 @@
+# --- KHAI BÁO BIẾN TOÀN CẦU ĐỂ HIỆN CHỮ LÊN MÀN HÌNH ---
+globals:
+  - id: ai_status
+    type: std::string
+    initial_value: '"San sang"'
+  - id: ai_answer
+    type: std::string
+    initial_value: '""'
+
 esphome:
   name: duc-moc-gateway
 
@@ -13,12 +22,14 @@ esp32:
       CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
       CONFIG_SPIRAM_RODATA: "y"
 
-psram: # Kích hoạt 32MB RAM
+# Kích hoạt "Full lực" 32MB PSRAM cho P4
+psram:
 
 logger:
   level: DEBUG
   hardware_uart: USB_SERIAL_JTAG
 
+# Cầu nối gọi C6 gánh WiFi + Bluetooth qua SDIO
 esp32_hosted:
   variant: ESP32C6
   reset_pin: GPIO54
@@ -38,7 +49,7 @@ wifi:
     - ssid: "TrungAnh_2.4G"
       password: "0913718786"
 
-# --- MÀN HÌNH (GPIO 1 & 2) ---
+# --- MẮT: MÀN HÌNH OLED SSD1306 ---
 i2c:
   sda: GPIO1
   scl: GPIO2
@@ -47,25 +58,28 @@ i2c:
 font:
   - file: "gfonts://Roboto"
     id: font_roboto
-    size: 14
+    size: 12 # Để font nhỏ một chút cho hiện được nhiều chữ
 
 display:
   - platform: ssd1306_i2c
     model: "SSD1306 128x64"
     address: 0x3C
     lambda: |-
-      it.print(0, 0, id(font_roboto), "Duc Moc Gateway");
+      it.print(0, 0, id(font_roboto), "DUC MOC GATEWAY");
+      
+      // Hiện trạng thái WiFi và AI
       if (id(wifi_w).is_connected()) {
-        it.print(0, 20, id(font_roboto), "WiFi: OK");
+        it.print(100, 0, id(font_roboto), "WiFi");
       }
-      // Hiển thị trạng thái AI khi đang nghe
-      if (id(va).is_running()) {
-         it.print(0, 45, id(font_roboto), "AI: Dang nghe...");
-      } else {
-         it.print(0, 45, id(font_roboto), "AI: San sang");
-      }
+      
+      it.print(0, 15, id(font_roboto), id(ai_status).c_str());
+      
+      // Hiển thị nội dung câu trả lời của AI
+      // Tự động xuống dòng cơ bản
+      it.printf(0, 32, id(font_roboto), "%.25s", id(ai_answer).substr(0, 25).c_str());
+      it.printf(0, 48, id(font_roboto), "%.25s", id(ai_answer).length() > 25 ? id(ai_answer).substr(25, 25).c_str() : "");
 
-# --- ÂM THANH I2S (GPIO 3, 4, 5, 6) ---
+# --- TAI & MỒM: ÂM THANH I2S ---
 i2s_audio:
   - i2s_lrclk_pin: GPIO3 
     i2s_bclk_pin: GPIO4  
@@ -83,23 +97,39 @@ speaker:
     i2s_dout_pin: GPIO6
     dac_type: external
 
-# --- KÍCH HOẠT VOICE ASSISTANT (TRỢ LÝ ẢO) ---
+# --- TRỢ LÝ ẢO: VOICE ASSISTANT CÓ HIỂN THỊ CHỮ ---
 voice_assistant:
   id: va
   microphone: ai_mic
   speaker: ai_speaker
-  use_wake_word: true # Cho phép gọi "Hey Jarvis" hoặc từ khóa tự chọn
+  use_wake_word: true
+  on_listening:
+    - lambda: |-
+        id(ai_status) = "Dang nghe...";
+        id(ai_answer) = "";
+  on_stt_output: # Khi AI bắt được chữ bác nói
+    - lambda: id(ai_answer) = x;
+  on_tts_start: # Khi AI trả lời bằng văn bản và bắt đầu phát tiếng
+    - lambda: |-
+        id(ai_status) = "AI tra loi:";
+        id(ai_answer) = x;
+  on_end:
+    - delay: 10s # Giữ chữ trên màn hình 10 giây cho bác kịp đọc
+    - lambda: |-
+        id(ai_status) = "San sang";
+        id(ai_answer) = "";
 
-# --- BLUETOOTH & UPDATE C6 (MÓN HỜI CỦA BÁC) ---
+# --- BLUETOOTH PROXY ---
 bluetooth_proxy:
   active: true
 
-# Đoạn này sẽ giúp update con C6 để chạy song song WiFi+BT
-# Bác chỉ bỏ dấu # khi đã upload file .bin lên GitHub nhé
+# --- CẬP NHẬT CON C6 (VÁ LỖI 100% VỚI SHA256 CỦA BÁC) ---
 update:
-  platform: esp32_hosted
-  name: "C6 Coprocessor Update"
-  path: network_adapter.bin 
+  - platform: esp32_hosted
+    name: "C6 Coprocessor Update"
+    type: binary # Bắt buộc phải có type: binary để không bị lỗi build
+    path: network_adapter_esp32c6.bin
+    sha256: "2aa46dbcd18f5b2046f58b82cdc62bdf21af137930e67c4b3b114f6e3e0daf15"
 
 api:
 ota:
