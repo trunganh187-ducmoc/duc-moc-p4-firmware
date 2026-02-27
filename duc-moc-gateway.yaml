@@ -13,15 +13,14 @@ esp32:
       CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
       CONFIG_SPIRAM_RODATA: "y"
 
-# 1. Đánh thức 32MB RAM
+# Đánh thức 32MB RAM
 psram:
 
-# 2. Xuất log ra cổng USB giữa
 logger:
   level: DEBUG
   hardware_uart: USB_SERIAL_JTAG
 
-# 3. Mật mã WiFi chuẩn 100% của Guition
+# Cầu nối gọi C6 thức dậy gánh WiFi
 esp32_hosted:
   variant: ESP32C6
   reset_pin: GPIO54
@@ -42,7 +41,53 @@ wifi:
   ap:
     ssid: "Duc Moc Gateway Fallback"
 
-# 4. Giữ lại Radar Bluetooth
+# --- MẮT: MÀN HÌNH OLED ---
+i2c:
+  sda: GPIO1
+  scl: GPIO2
+  scan: true
+
+font:
+  - file: "gfonts://Roboto"
+    id: font_roboto
+    size: 14
+
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 128x64"
+    address: 0x3C
+    lambda: |-
+      it.print(0, 0, id(font_roboto), "Duc Moc Gateway");
+      if (id(wifi_w).is_connected()) {
+        it.print(0, 20, id(font_roboto), "WiFi: Da ket noi");
+      } else {
+        it.print(0, 20, id(font_roboto), "WiFi: Dang tim...");
+      }
+      it.print(0, 45, id(font_roboto), "AI: San sang!");
+
+# --- TAI & MỒM: ÂM THANH I2S ---
+i2s_audio:
+  - i2s_lrclk_pin: GPIO3 # Chân WS chung
+    i2s_bclk_pin: GPIO4  # Chân SCK chung
+
+microphone:
+  - platform: i2s_audio
+    id: ai_mic
+    i2s_din_pin: GPIO5
+    adc_type: external
+    pdm: false
+
+speaker:
+  - platform: i2s_audio
+    id: ai_speaker
+    i2s_dout_pin: GPIO6
+    dac_type: external
+
+voice_assistant:
+  microphone: ai_mic
+  speaker: ai_speaker
+
+# --- BLUETOOTH PROXY ---
 esp32_ble_tracker:
   scan_parameters:
     interval: 1100ms
