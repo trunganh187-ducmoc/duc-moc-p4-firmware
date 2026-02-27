@@ -9,11 +9,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      # Đã nâng cấp lên v7 mới nhất của ESPHome
-      - uses: esphome/build-action@v7
+      # Lấy thẳng bản main mới nhất của nhà phát hành, không bao giờ dính lỗi cache
+      - uses: esphome/build-action@main
         id: esphome-build
         with:
-          yaml-file: duc-moc-gateway.yaml
+          yaml_file: duc-moc-gateway.yaml
           
       - uses: actions/upload-artifact@v4
         with:
