@@ -13,16 +13,19 @@ esp32:
       CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
       CONFIG_SPIRAM_RODATA: "y"
 
+# Đánh thức "Quái vật" 32MB RAM
 psram:
 
+# Thông nòng Log ra cổng USB ở giữa
 logger:
   level: DEBUG
   hardware_uart: USB_SERIAL_JTAG
 
-# ĐÂY LÀ "MẬT MÃ" CHUẨN 100% CỦA WAVESHARE DEV-KIT
+# Cầu nối WiFi chuẩn Waveshare (Đã thêm lại active_high)
 esp32_hosted:
   variant: ESP32C6
   reset_pin: GPIO54
+  active_high: true
   clk_pin: GPIO43
   cmd_pin: GPIO44
   d0_pin: GPIO39
