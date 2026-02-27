@@ -13,14 +13,14 @@ esp32:
       CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
       CONFIG_SPIRAM_RODATA: "y"
 
-# Đánh thức RAM
+# Đánh thức 32MB RAM
 psram:
 
 logger:
   level: DEBUG
   hardware_uart: USB_SERIAL_JTAG
 
-# Cầu nối gọi C6
+# Cầu nối WiFi chuẩn Guition (Reset=54, CMD=19, CLK=18...)
 esp32_hosted:
   variant: ESP32C6
   reset_pin: GPIO54
@@ -32,9 +32,8 @@ esp32_hosted:
   d2_pin: GPIO16
   d3_pin: GPIO17
 
-# --- ĐÃ THÊM ID CHO WIFI Ở ĐÂY ĐỂ MÀN HÌNH NHẬN DIỆN ---
 wifi:
-  id: wifi_w
+  id: wifi_w # Đã sửa lỗi thiếu ID
   networks:
     - ssid: "......VUPHONG....."
       password: "0913718786@bc.."
@@ -43,7 +42,7 @@ wifi:
   ap:
     ssid: "Duc Moc Gateway Fallback"
 
-# --- MẮT: MÀN HÌNH OLED ---
+# --- MẮT: MÀN HÌNH OLED (GPIO 1 & 2) ---
 i2c:
   sda: GPIO1
   scl: GPIO2
@@ -61,13 +60,13 @@ display:
     lambda: |-
       it.print(0, 0, id(font_roboto), "Duc Moc Gateway");
       if (id(wifi_w).is_connected()) {
-        it.print(0, 20, id(font_roboto), "WiFi: Da ket noi");
+        it.print(0, 20, id(font_roboto), "WiFi: OK");
       } else {
-        it.print(0, 20, id(font_roboto), "WiFi: Dang tim...");
+        it.print(0, 20, id(font_roboto), "WiFi: Looking...");
       }
-      it.print(0, 45, id(font_roboto), "AI: San sang!");
+      it.print(0, 45, id(font_roboto), "AI: Ready!");
 
-# --- TAI & MỒM: ÂM THANH I2S ---
+# --- TAI & MỒM: ÂM THANH I2S (GPIO 3, 4, 5, 6) ---
 i2s_audio:
   - i2s_lrclk_pin: GPIO3 
     i2s_bclk_pin: GPIO4  
@@ -89,18 +88,7 @@ voice_assistant:
   microphone: ai_mic
   speaker: ai_speaker
 
-# --- BLUETOOTH PROXY ---
-esp32_ble_tracker:
-  scan_parameters:
-    interval: 1100ms
-    window: 1100ms
-    active: true
-
-bluetooth_proxy:
-  active: true
-  connection_slots: 3
-
-captive_portal:
+# TẠM THỜI LOẠI BỎ BLUETOOTH ĐỂ VƯỢT QUA BƯỚC 400 CỦA MÁY CHỦ
 api:
 ota:
   - platform: esphome
