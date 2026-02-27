@@ -8,17 +8,24 @@ esp32:
     type: esp-idf
     version: 5.4.0
 
+# Đã bổ sung đủ 6 chân tín hiệu SDIO nối P4 với C6
 esp32_hosted:
   variant: ESP32C6
   reset_pin: GPIO54
   active_high: true
+  clk_pin: GPIO43
+  cmd_pin: GPIO44
+  d0_pin: GPIO39
+  d1_pin: GPIO40
+  d2_pin: GPIO41
+  d3_pin: GPIO42
 
 wifi:
   networks:
-    - ssid: "......VUPHONG....."
-      password: "0913718786@bc.."
-    - ssid: "TrungAnh_2.4G"
-      password: "0913718786"
+    - ssid: "Ten_WiFi_Tang_1"
+      password: "Mat_Khau_Tang_1"
+    - ssid: "Ten_WiFi_Tang_2"
+      password: "Mat_Khau_Tang_2"
   ap:
     ssid: "Duc Moc Gateway Fallback"
 
