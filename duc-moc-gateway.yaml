@@ -2,7 +2,7 @@ esphome:
   name: duc-moc-gateway
 
 esp32:
-  board: esp32 # Đổi tên thành mạch chung chung để "lừa" hệ thống qua cửa
+  board: esp32dev # Đổi tên thành mạch chung chung để "lừa" hệ thống qua cửa
   variant: esp32p4 # Khai báo lõi thực sự là P4
   framework:
     type: esp-idf
