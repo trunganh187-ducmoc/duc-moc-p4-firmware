@@ -13,14 +13,14 @@ esp32:
       CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
       CONFIG_SPIRAM_RODATA: "y"
 
-# Đánh thức 32MB RAM
+# Đánh thức RAM
 psram:
 
 logger:
   level: DEBUG
   hardware_uart: USB_SERIAL_JTAG
 
-# Cầu nối gọi C6 thức dậy gánh WiFi
+# Cầu nối gọi C6
 esp32_hosted:
   variant: ESP32C6
   reset_pin: GPIO54
@@ -32,7 +32,9 @@ esp32_hosted:
   d2_pin: GPIO16
   d3_pin: GPIO17
 
+# --- ĐÃ THÊM ID CHO WIFI Ở ĐÂY ĐỂ MÀN HÌNH NHẬN DIỆN ---
 wifi:
+  id: wifi_w
   networks:
     - ssid: "......VUPHONG....."
       password: "0913718786@bc.."
@@ -67,8 +69,8 @@ display:
 
 # --- TAI & MỒM: ÂM THANH I2S ---
 i2s_audio:
-  - i2s_lrclk_pin: GPIO3 # Chân WS chung
-    i2s_bclk_pin: GPIO4  # Chân SCK chung
+  - i2s_lrclk_pin: GPIO3 
+    i2s_bclk_pin: GPIO4  
 
 microphone:
   - platform: i2s_audio
