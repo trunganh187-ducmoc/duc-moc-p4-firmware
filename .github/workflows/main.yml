@@ -8,10 +8,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: esphome/build-action@v2
+      
+      # Đã nâng cấp lên v7 mới nhất của ESPHome
+      - uses: esphome/build-action@v7
         id: esphome-build
         with:
-          config_file: duc-moc-gateway.yaml
+          yaml-file: duc-moc-gateway.yaml
+          
       - uses: actions/upload-artifact@v4
         with:
           name: firmware-bin
