@@ -22,10 +22,10 @@ esp32_hosted:
 
 wifi:
   networks:
-    - ssid: "Ten_WiFi_Tang_1"
-      password: "Mat_Khau_Tang_1"
-    - ssid: "Ten_WiFi_Tang_2"
-      password: "Mat_Khau_Tang_2"
+    - ssid: "......VUPHONG....."
+      password: "0913718786@bc.."
+    - ssid: "TrungAnh_2.4G"
+      password: "0913718786"
   ap:
     ssid: "Duc Moc Gateway Fallback"
 
