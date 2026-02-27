@@ -1,3 +1,5 @@
+web_server:
+  port: 80
 # --- KHAI BÁO BIẾN TOÀN CẦU ĐỂ HIỆN CHỮ LÊN MÀN HÌNH ---
 globals:
   - id: ai_status
