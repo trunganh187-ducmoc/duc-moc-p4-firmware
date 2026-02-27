@@ -16,11 +16,12 @@ esp32:
 # 1. Đánh thức 32MB RAM
 psram:
 
+# 2. Xuất log ra cổng USB giữa
 logger:
   level: DEBUG
   hardware_uart: USB_SERIAL_JTAG
 
-# 2. Cầu nối WiFi chuẩn Guition (Gọi C6 dậy)
+# 3. Mật mã WiFi chuẩn 100% của Guition
 esp32_hosted:
   variant: ESP32C6
   reset_pin: GPIO54
@@ -41,7 +42,7 @@ wifi:
   ap:
     ssid: "Duc Moc Gateway Fallback"
 
-# 3. Kích hoạt Bluetooth (Biến mạch thành Trạm Radar quét thiết bị Bluetooth quanh xưởng)
+# 4. Giữ lại Radar Bluetooth
 esp32_ble_tracker:
   scan_parameters:
     interval: 1100ms
@@ -51,17 +52,6 @@ esp32_ble_tracker:
 bluetooth_proxy:
   active: true
   connection_slots: 3
-
-# 4. Kích hoạt Cổng mạng dây RJ45 (Chạy chip IP101 cực xịn)
-ethernet:
-  type: IP101
-  mdc_pin: GPIO31
-  mdio_pin: GPIO52
-  power_pin: GPIO51
-  clk:
-    mode: CLK_EXT_IN
-    pin: GPIO50
-  phy_addr: 1
 
 captive_portal:
 api:
