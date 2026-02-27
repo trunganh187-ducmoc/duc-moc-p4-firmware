@@ -23,15 +23,17 @@ logger:
 
 # Cầu nối WiFi chuẩn Waveshare (Đã thêm lại active_high)
 esp32_hosted:
+  active_high: true
   variant: ESP32C6
   reset_pin: GPIO54
-  active_high: true
-  clk_pin: GPIO43
-  cmd_pin: GPIO44
-  d0_pin: GPIO39
-  d1_pin: GPIO40
-  d2_pin: GPIO41
-  d3_pin: GPIO42
+  cmd_pin: GPIO19
+  clk_pin: GPIO18
+  d0_pin: GPIO14
+  d1_pin: GPIO15
+  d2_pin: GPIO16
+  d3_pin: GPIO17
+
+
 
 wifi:
   networks:
@@ -41,7 +43,25 @@ wifi:
       password: "0913718786"
   ap:
     ssid: "Duc Moc Gateway Fallback"
+esp32_ble_tracker:
+  scan_parameters:
+    interval: 1100ms
+    window: 1100ms
+    active: true
 
+bluetooth_proxy:
+  active: true
+  connection_slots: 3
+
+ethernet:
+  type: IP101
+  mdc_pin: GPIO31
+  mdio_pin: GPIO52
+  power_pin: GPIO51
+  clk:
+    mode: CLK_EXT_IN
+    pin: GPIO50
+  phy_addr: 1
 captive_portal:
 api:
 ota:
