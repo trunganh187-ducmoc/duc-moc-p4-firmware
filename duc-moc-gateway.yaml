@@ -13,27 +13,24 @@ esp32:
       CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
       CONFIG_SPIRAM_RODATA: "y"
 
-# Đánh thức "Quái vật" 32MB RAM
+# 1. Đánh thức 32MB RAM
 psram:
 
-# Thông nòng Log ra cổng USB ở giữa
 logger:
   level: DEBUG
   hardware_uart: USB_SERIAL_JTAG
 
-# Cầu nối WiFi chuẩn Waveshare (Đã thêm lại active_high)
+# 2. Cầu nối WiFi chuẩn Guition (Gọi C6 dậy)
 esp32_hosted:
-  active_high: true
   variant: ESP32C6
   reset_pin: GPIO54
+  active_high: true
   cmd_pin: GPIO19
   clk_pin: GPIO18
   d0_pin: GPIO14
   d1_pin: GPIO15
   d2_pin: GPIO16
   d3_pin: GPIO17
-
-
 
 wifi:
   networks:
@@ -43,6 +40,8 @@ wifi:
       password: "0913718786"
   ap:
     ssid: "Duc Moc Gateway Fallback"
+
+# 3. Kích hoạt Bluetooth (Biến mạch thành Trạm Radar quét thiết bị Bluetooth quanh xưởng)
 esp32_ble_tracker:
   scan_parameters:
     interval: 1100ms
@@ -53,6 +52,7 @@ bluetooth_proxy:
   active: true
   connection_slots: 3
 
+# 4. Kích hoạt Cổng mạng dây RJ45 (Chạy chip IP101 cực xịn)
 ethernet:
   type: IP101
   mdc_pin: GPIO31
@@ -62,6 +62,7 @@ ethernet:
     mode: CLK_EXT_IN
     pin: GPIO50
   phy_addr: 1
+
 captive_portal:
 api:
 ota:
