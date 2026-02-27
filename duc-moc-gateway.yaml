@@ -2,13 +2,12 @@ esphome:
   name: duc-moc-gateway
 
 esp32:
-  board: esp32dev # Đổi tên thành mạch chung chung để "lừa" hệ thống qua cửa
-  variant: esp32p4 # Khai báo lõi thực sự là P4
+  board: esp32p4  # Mật danh chuẩn 100% để qua mặt cả 2 lớp bảo vệ
+  variant: esp32p4
   framework:
     type: esp-idf
-    # Đã bỏ dòng version để hệ thống tự chọn bản ngon nhất, hết báo vàng
 
-# Cầu nối WiFi (Đã đủ 6 chân tín hiệu chuẩn)
+# Cầu nối WiFi SDIO 6 chân chuẩn xác cho P4 và C6
 esp32_hosted:
   variant: ESP32C6
   reset_pin: GPIO54
@@ -20,6 +19,7 @@ esp32_hosted:
   d2_pin: GPIO41
   d3_pin: GPIO42
 
+# Danh sách WiFi xưởng Đức Mộc (Tự động chuyển mạng)
 wifi:
   networks:
     - ssid: "......VUPHONG....."
