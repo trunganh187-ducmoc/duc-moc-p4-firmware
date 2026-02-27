@@ -120,7 +120,7 @@ bluetooth_proxy:
 update:
   - platform: esp32_hosted
     name: "C6 Coprocessor Update"
-    type: binary # Bắt buộc phải có type: binary để không bị lỗi build
+    type: embedded # ĐÃ SỬA THÀNH EMBEDDED
     path: network_adapter_esp32c6.bin
     sha256: "2aa46dbcd18f5b2046f58b82cdc62bdf21af137930e67c4b3b114f6e3e0daf15"
 
