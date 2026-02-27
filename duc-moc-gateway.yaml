@@ -13,14 +13,13 @@ esp32:
       CONFIG_SPIRAM_FETCH_INSTRUCTIONS: "y"
       CONFIG_SPIRAM_RODATA: "y"
 
-# Đánh thức 32MB RAM
-psram:
+psram: # Đánh thức 32MB RAM
 
 logger:
   level: DEBUG
   hardware_uart: USB_SERIAL_JTAG
 
-# Cầu nối WiFi chuẩn Guition (Reset=54, CMD=19, CLK=18...)
+# Cấu hình kết nối C6 chuẩn xác theo tài liệu bác gửi
 esp32_hosted:
   variant: ESP32C6
   reset_pin: GPIO54
@@ -33,16 +32,14 @@ esp32_hosted:
   d3_pin: GPIO17
 
 wifi:
-  id: wifi_w # Đã sửa lỗi thiếu ID
+  id: wifi_w
   networks:
     - ssid: "......VUPHONG....."
       password: "0913718786@bc.."
     - ssid: "TrungAnh_2.4G"
       password: "0913718786"
-  ap:
-    ssid: "Duc Moc Gateway Fallback"
 
-# --- MẮT: MÀN HÌNH OLED (GPIO 1 & 2) ---
+# --- MẮT: MÀN HÌNH OLED (Dùng GPIO 1 & 2 theo Pinout) ---
 i2c:
   sda: GPIO1
   scl: GPIO2
@@ -66,7 +63,7 @@ display:
       }
       it.print(0, 45, id(font_roboto), "AI: Ready!");
 
-# --- TAI & MỒM: ÂM THANH I2S (GPIO 3, 4, 5, 6) ---
+# --- TAI: MICRO INMP441 (Dùng GPIO 3, 4, 5) ---
 i2s_audio:
   - i2s_lrclk_pin: GPIO3 
     i2s_bclk_pin: GPIO4  
@@ -78,17 +75,7 @@ microphone:
     adc_type: external
     pdm: false
 
-speaker:
-  - platform: i2s_audio
-    id: ai_speaker
-    i2s_dout_pin: GPIO6
-    dac_type: external
-
-voice_assistant:
-  microphone: ai_mic
-  speaker: ai_speaker
-
-# TẠM THỜI LOẠI BỎ BLUETOOTH ĐỂ VƯỢT QUA BƯỚC 400 CỦA MÁY CHỦ
+# TẠM BỎ LOA VÀ BLUETOOTH ĐỂ GIẢM TẢI DOWNLOAD CHO MÁY CHỦ
 api:
 ota:
   - platform: esphome
