@@ -9,11 +9,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      # Lấy thẳng bản main mới nhất của nhà phát hành, không bao giờ dính lỗi cache
       - uses: esphome/build-action@main
         id: esphome-build
         with:
-          yaml_file: duc-moc-gateway.yaml
+          yaml-file: duc-moc-gateway.yaml # CHÍNH LÀ CHỖ NÀY: Dùng gạch ngang (-)
           
       - uses: actions/upload-artifact@v4
         with:
