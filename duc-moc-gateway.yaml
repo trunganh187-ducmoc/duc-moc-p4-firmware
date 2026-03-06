@@ -1,5 +1,6 @@
 web_server:
   port: 80
+
 # --- KHAI BÁO BIẾN TOÀN CẦU ĐỂ HIỆN CHỮ LÊN MÀN HÌNH ---
 globals:
   - id: ai_status
@@ -60,7 +61,7 @@ i2c:
 font:
   - file: "gfonts://Roboto"
     id: font_roboto
-    size: 12 # Để font nhỏ một chút cho hiện được nhiều chữ
+    size: 12 
 
 display:
   - platform: ssd1306_i2c
@@ -77,7 +78,6 @@ display:
       it.print(0, 15, id(font_roboto), id(ai_status).c_str());
       
       // Hiển thị nội dung câu trả lời của AI
-      // Tự động xuống dòng cơ bản
       it.printf(0, 32, id(font_roboto), "%.25s", id(ai_answer).substr(0, 25).c_str());
       it.printf(0, 48, id(font_roboto), "%.25s", id(ai_answer).length() > 25 ? id(ai_answer).substr(25, 25).c_str() : "");
 
@@ -107,25 +107,27 @@ voice_assistant:
   use_wake_word: true
   on_listening:
     - lambda: 'id(ai_status) = "Dang nghe..."; id(ai_answer) = "";'
-  on_stt_end: # ĐÃ VÁ LỖI: Dùng on_stt_end để nhận chữ bác nói
+  on_stt_end:
     - lambda: 'id(ai_answer) = x;'
-  on_tts_start: # Nhận chữ AI chuẩn bị trả lời
+  on_tts_start:
     - lambda: 'id(ai_status) = "AI tra loi:"; id(ai_answer) = x;'
   on_end:
-    - delay: 10s # Giữ chữ trên màn hình 10 giây
+    - delay: 10s
     - lambda: 'id(ai_status) = "San sang"; id(ai_answer) = "";'
+
 # --- BLUETOOTH PROXY ---
 bluetooth_proxy:
   active: true
 
-# --- CẬP NHẬT CON C6 (VÁ LỖI 100% VỚI SHA256 CỦA BÁC) ---
+# --- CẬP NHẬT CON C6 ---
 update:
   - platform: esp32_hosted
     name: "C6 Coprocessor Update"
-    type: embedded # ĐÃ SỬA THÀNH EMBEDDED
+    type: embedded 
     path: network_adapter_esp32c6.bin
     sha256: "2aa46dbcd18f5b2046f58b82cdc62bdf21af137930e67c4b3b114f6e3e0daf15"
 
 api:
+
 ota:
   - platform: esphome
