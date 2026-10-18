@@ -1,6 +1,10 @@
 name: Build ESPHome Firmware
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -8,11 +12,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: esphome/build-action@main
         id: esphome-build
-        continue-on-error: true # Bỏ qua lỗi Manifest cuối cùng
+        continue-on-error: true
         with:
           yaml-file: duc-moc-gateway.yaml
       - uses: actions/upload-artifact@v4
         with:
           name: firmware-bin
-          # Lấy chính xác file .bin
-          path: .esphome/build/duc-moc-gateway/.pioenvs/duc-moc-gateway/*.bin
+          path: |
+            ${{ steps.esphome-build.outputs.name }}
+            .esphome/build/duc-moc-gateway/**.bin
