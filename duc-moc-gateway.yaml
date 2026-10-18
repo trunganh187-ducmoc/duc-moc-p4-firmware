@@ -52,6 +52,12 @@ wifi:
     - ssid: "TrungAnh_2.4G"
       password: "0913718786"
 
+# --- HÌNH ẢNH LOGO DUC MOC ---
+image:
+  - file: "logo_ducmoc_48.png"
+    id: logo_48
+    type: BINARY
+
 # --- MẮT: MÀN HÌNH OLED SSD1306 ---
 i2c:
   sda: GPIO1
@@ -60,26 +66,61 @@ i2c:
 
 font:
   - file: "gfonts://Roboto"
-    id: font_roboto
-    size: 12 
+    id: font_title
+    size: 13
+  - file: "gfonts://Roboto"
+    id: font_sub
+    size: 10
+  - file: "gfonts://Roboto"
+    id: font_text
+    size: 10
 
 display:
   - platform: ssd1306_i2c
     model: "SSD1306 128x64"
     address: 0x3C
     lambda: |-
-      it.print(0, 0, id(font_roboto), "DUC MOC GATEWAY");
-      
-      // Hiện trạng thái WiFi và AI
-      if (id(wifi_w).is_connected()) {
-        it.print(100, 0, id(font_roboto), "WiFi");
+      // Khi AI đang rảnh / Sẵn sàng (Idle)
+      if (id(ai_status) == "San sang" && id(ai_answer).empty()) {
+        // Logo Duc Moc bên trái (48x48)
+        it.image(2, 8, id(logo_48));
+        
+        // Vạch ngăn cách dọc tinh tế
+        it.line(54, 10, 54, 54);
+        
+        // Cụm thông tin thương hiệu bên phải
+        it.print(60, 10, id(font_title), "DUC MOC");
+        it.print(60, 26, id(font_sub), "AI Gateway");
+        
+        if (id(wifi_w).is_connected()) {
+          it.print(60, 42, id(font_sub), "WiFi: OK");
+        } else {
+          it.print(60, 42, id(font_sub), "WiFi: ...");
+        }
+      } else {
+        // Giao diện khi AI đang tương tác (Đang nghe hoặc Đang trả lời)
+        // Thanh Header
+        it.print(0, 0, id(font_sub), "DUC MOC AI");
+        if (id(wifi_w).is_connected()) {
+          it.print(98, 0, id(font_sub), "WiFi");
+        }
+        it.line(0, 12, 127, 12);
+        
+        // Trạng thái hiện tại (Đang nghe... / AI tra loi:)
+        it.print(0, 15, id(font_title), id(ai_status).c_str());
+        
+        // Hiển thị nội dung câu trả lời (chia 3 dòng rõ ràng)
+        std::string ans = id(ai_answer);
+        if (!ans.empty()) {
+          it.printf(0, 31, id(font_text), "%.22s", ans.c_str());
+          if (ans.length() > 22) {
+            it.printf(0, 42, id(font_text), "%.22s", ans.substr(22).c_str());
+          }
+          if (ans.length() > 44) {
+            it.printf(0, 53, id(font_text), "%.22s", ans.substr(44).c_str());
+          }
+        }
       }
-      
-      it.print(0, 15, id(font_roboto), id(ai_status).c_str());
-      
-      // Hiển thị nội dung câu trả lời của AI
-      it.printf(0, 32, id(font_roboto), "%.25s", id(ai_answer).substr(0, 25).c_str());
-      it.printf(0, 48, id(font_roboto), "%.25s", id(ai_answer).length() > 25 ? id(ai_answer).substr(25, 25).c_str() : "");
 
 # --- TAI & MỒM: ÂM THANH I2S ---
 i2s_audio:
